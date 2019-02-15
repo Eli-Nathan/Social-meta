@@ -1,8 +1,8 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Deals from './components/Deals'
+import SocialMeta from './components/SocialMeta'
 
-let dataBoxes = document.getElementById("data-boxes")
+let socialMeta = document.getElementById("social-meta")
 
-ReactDOM.render( <Deals />, dataBoxes )
+ReactDOM.render( <SocialMeta />, socialMeta )

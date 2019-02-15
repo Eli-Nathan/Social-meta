@@ -28,225 +28,85 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var Data =
+var SocialMeta =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(Data, _Component);
+  _inherits(SocialMeta, _Component);
 
-  function Data(props) {
+  function SocialMeta(props) {
     var _this2;
 
-    _classCallCheck(this, Data);
+    _classCallCheck(this, SocialMeta);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(Data).call(this, props));
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(SocialMeta).call(this, props));
     _this2.state = {
-      inputTrue: false,
-      dealAmount: document.getElementById("numberOfDeals").value
+      inputTrue: true
     };
     return _this2;
   }
 
-  _createClass(Data, [{
+  _createClass(SocialMeta, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var inputs = document.querySelectorAll("input:not(.chooseNumber)");
-      var blocks = document.querySelectorAll(".deal-block");
-
       var _this = this;
 
       var links = document.querySelector(".generate-links");
-      var genCSV = document.getElementById("genCSV");
-      var dealAmount = document.getElementById("numberOfDeals");
-      var data = [];
-      var x;
-      dealAmount.addEventListener("keyup", function () {
-        _this.setState({
-          dealAmount: dealAmount.value
-        });
-
-        var inputs = document.querySelectorAll("input");
-        data.length = _this.state.dealAmount;
-
-        _this.createDownloadJSONButton(data);
-
-        genCSV.addEventListener("click", function (e) {
-          _this.DownloadJSON2CSV(data);
-        });
-      });
-
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].addEventListener("input", function (e) {
-          _this.setState({
-            inputTrue: true
-          });
-
-          data.length = 0;
-
-          for (x = 0; x < _this.state.dealAmount; x++) {
-            data.push({
-              "Name": document.querySelector("#name" + (x + 1)).value,
-              "Spec": document.querySelector("#variant" + (x + 1)).value,
-              "Image": document.querySelector("#image" + (x + 1)).value,
-              "Monthly": parseInt(document.querySelector("#monthly" + (x + 1)).value),
-              "Deposit": parseInt(document.querySelector("#deposit" + (x + 1)).value),
-              "Months": parseInt(document.querySelector("#months" + (x + 1)).value)
-            });
-          }
-
-          _this.createDownloadJSONButton(data);
-        });
-      }
-
-      genCSV.addEventListener("click", function (e) {
-        _this.DownloadJSON2CSV(data);
-      });
-    }
-    /* Render blocks function */
-
-  }, {
-    key: "renderBlocks",
-    value: function renderBlocks() {
-      var blksToRender = [];
-      var dealAmount = parseInt(this.state.dealAmount);
-
-      for (var i = 0; i < dealAmount; i++) {
-        blksToRender.push({
-          "number": i + 1
-        });
-      }
-
-      var blks = blksToRender.map(function (blk) {
-        return _react.default.createElement("div", {
-          className: "col-md-6 deal-block",
-          key: blk.number
-        }, _react.default.createElement("div", {
-          className: "mb-4 border border-info rounded p-2 p-sm-4"
-        }, _react.default.createElement("h5", null, "Deal " + blk.number + ":"), _react.default.createElement("div", {
-          className: "form-group d-block"
-        }, _react.default.createElement("label", {
-          htmlFor: "name" + blk.number,
-          className: "d-block mb-0"
-        }, "Car name"), _react.default.createElement("input", {
-          type: "text",
-          name: "Name",
-          id: "name" + blk.number,
-          className: "d-block form-control"
-        })), _react.default.createElement("div", {
-          className: "form-group d-block"
-        }, _react.default.createElement("label", {
-          htmlFor: "variant" + blk.number,
-          className: "d-block mb-0"
-        }, "Variant"), _react.default.createElement("input", {
-          type: "text",
-          name: "Spec",
-          id: "variant" + blk.number,
-          className: "d-block form-control"
-        })), _react.default.createElement("div", {
-          className: "form-group d-block"
-        }, _react.default.createElement("label", {
-          htmlFor: "deposit" + blk.number,
-          className: "d-block mb-0"
-        }, "Deposit (Dont include \xA3)"), _react.default.createElement("input", {
-          type: "number",
-          name: "Deposit",
-          id: "deposit" + blk.number,
-          className: "d-block form-control"
-        })), _react.default.createElement("div", {
-          className: "form-group d-block"
-        }, _react.default.createElement("label", {
-          htmlFor: "monthly" + blk.number,
-          className: "d-block mb-0"
-        }, "Monthly (Dont include \xA3)"), _react.default.createElement("input", {
-          type: "number",
-          name: "Monthly",
-          id: "monthly" + blk.number,
-          className: "d-block form-control"
-        })), _react.default.createElement("div", {
-          className: "form-group d-block"
-        }, _react.default.createElement("label", {
-          htmlFor: "image" + blk.number,
-          className: "d-block mb-0"
-        }, "Image URL"), _react.default.createElement("input", {
-          type: "text",
-          name: "Image",
-          id: "image" + blk.number,
-          className: "d-block form-control"
-        })), _react.default.createElement("div", {
-          className: "form-group d-block"
-        }, _react.default.createElement("label", {
-          htmlFor: "months" + blk.number,
-          className: "d-block mb-0"
-        }, "Term (months)"), _react.default.createElement("input", {
-          type: "number",
-          name: "Months",
-          id: "months" + blk.number,
-          className: "d-block form-control"
-        }))));
-      });
-      return blks;
-    }
-    /* Download button functions */
-
-  }, {
-    key: "DownloadJSON2CSV",
-    value: function DownloadJSON2CSV(objArray) {
-      var array = _typeof(objArray) != 'object' ? JSON.parse(objArray) : objArray;
-      var str = 'Name, Spec, Image, Deposit, Monthly, Months' + '\r\n';
-
-      for (var i = 0; i < array.length; i++) {
-        var line = '';
-
-        for (var index in array[i]) {
-          line += array[i][index] + ',';
-        }
-
-        line.slice(0, line.Length - 1);
-        str += line + '\r\n';
-      }
-
-      var blob = new Blob([str], {
-        type: "text/csv"
-      });
-      var url = URL.createObjectURL(blob);
-      genCSV.href = url;
-    }
-  }, {
-    key: "createDownloadJSONButton",
-    value: function createDownloadJSONButton(data) {
-      var json = JSON.stringify(data);
-      var blob = new Blob([json], {
-        type: "application/json"
-      });
-      var url = URL.createObjectURL(blob);
-      document.querySelector("#genJSON").href = url;
     }
   }, {
     key: "render",
     value: function render() {
       return _react.default.createElement("div", {
         className: "row"
-      }, this.renderBlocks(), _react.default.createElement("div", {
+      }, _react.default.createElement("div", {
+        className: "col-md-8 offset-md-2 col-lg-6 offset-lg-3"
+      }, _react.default.createElement("div", {
+        className: "mb-4 border border-info rounded p-2 p-sm-4"
+      }, _react.default.createElement("h5", null, "Your data"), _react.default.createElement("div", {
+        className: "form-group d-block"
+      }, _react.default.createElement("label", {
+        htmlFor: "title",
+        className: "d-block mb-0"
+      }, "Title"), _react.default.createElement("input", {
+        type: "text",
+        name: "Name",
+        id: "title",
+        className: "d-block form-control"
+      })), _react.default.createElement("div", {
+        className: "form-group d-block"
+      }, _react.default.createElement("label", {
+        htmlFor: "description",
+        className: "d-block mb-0"
+      }, "Description"), _react.default.createElement("textarea", {
+        name: "description",
+        id: "description",
+        className: "form-control",
+        rows: "6"
+      })), _react.default.createElement("div", {
+        className: "form-group d-block"
+      }, _react.default.createElement("label", {
+        htmlFor: "image",
+        className: "d-block mb-0"
+      }, "Image URL"), _react.default.createElement("input", {
+        type: "text",
+        name: "image",
+        id: "image",
+        className: "d-block form-control"
+      })))), _react.default.createElement("div", {
         className: "generate-links " + (this.state.inputTrue ? 'd-block' : 'd-none')
       }, _react.default.createElement("div", {
         className: "form-group d-block"
       }, _react.default.createElement("a", {
         href: "#",
-        id: "genJSON",
-        className: "btn btn-primary",
-        download: "affinity-deals.json"
-      }, "Generate JSON"), _react.default.createElement("a", {
-        href: "#",
-        id: "genCSV",
-        className: "btn btn-info",
-        download: "affinity-deals.csv"
-      }, "Generate CSV"))));
+        id: "generate",
+        className: "btn btn-success"
+      }, "Generate"))));
     }
   }]);
 
-  return Data;
+  return SocialMeta;
 }(_react.Component);
 
-var _default = Data;
+var _default = SocialMeta;
 exports.default = _default;
 
 },{"react":12}],2:[function(require,module,exports){
@@ -256,15 +116,15 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _Deals = _interopRequireDefault(require("./components/Deals"));
+var _SocialMeta = _interopRequireDefault(require("./components/SocialMeta"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dataBoxes = document.getElementById("data-boxes");
+var socialMeta = document.getElementById("social-meta");
 
-_reactDom.default.render(_react.default.createElement(_Deals.default, null), dataBoxes);
+_reactDom.default.render(_react.default.createElement(_SocialMeta.default, null), socialMeta);
 
-},{"./components/Deals":1,"react":12,"react-dom":9}],3:[function(require,module,exports){
+},{"./components/SocialMeta":1,"react":12,"react-dom":9}],3:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
