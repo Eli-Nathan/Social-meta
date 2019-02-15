@@ -1,7 +1,7 @@
-name: Deals
+name: Social meta
 markdown: redcarpet
 highlighter: null # or rouge or null
 exclude: ["node_modules", "gulpfile.js", "package.json",  "README.md", "_scripts", "_scss", "gemfile", "Gemfile.lock"]
 url: "https://eli-nathan.github.io/Social-meta/"
 destination: docs
-baseurl: ""
+baseurl: "/Social-meta"
