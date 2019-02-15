@@ -40,7 +40,7 @@ function (_Component) {
 
     _this2 = _possibleConstructorReturn(this, _getPrototypeOf(SocialMeta).call(this, props));
     _this2.state = {
-      inputTrue: true
+      inputTrue: false
     };
     return _this2;
   }
@@ -50,7 +50,7 @@ function (_Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      var links = document.querySelector(".generate-links");
+      var links = document.querySelector(".generate-link");
     }
   }, {
     key: "render",
@@ -58,6 +58,21 @@ function (_Component) {
       return _react.default.createElement("div", {
         className: "row"
       }, _react.default.createElement("div", {
+        className: "col-md-8 offset-md-2 col-lg-6 offset-lg-3"
+      }, _react.default.createElement("input", {
+        type: "checkbox",
+        id: "test1",
+        name: "radio-group"
+      }), _react.default.createElement("label", {
+        htmlFor: "test1",
+        className: "mr-3"
+      }, "Facebook"), _react.default.createElement("input", {
+        type: "checkbox",
+        id: "test2",
+        name: "radio-group"
+      }), _react.default.createElement("label", {
+        htmlFor: "test2"
+      }, "Twitter")), _react.default.createElement("div", {
         className: "col-md-8 offset-md-2 col-lg-6 offset-lg-3"
       }, _react.default.createElement("div", {
         className: "mb-4 border border-info rounded p-2 p-sm-4"
@@ -91,8 +106,18 @@ function (_Component) {
         name: "image",
         id: "image",
         className: "d-block form-control"
+      })), _react.default.createElement("div", {
+        className: "form-group d-block"
+      }, _react.default.createElement("label", {
+        htmlFor: "url",
+        className: "d-block mb-0"
+      }, "Page URL"), _react.default.createElement("input", {
+        type: "text",
+        name: "image",
+        id: "url",
+        className: "d-block form-control"
       })))), _react.default.createElement("div", {
-        className: "generate-links " + (this.state.inputTrue ? 'd-block' : 'd-none')
+        className: "generate-link " + (this.state.inputTrue ? 'd-block' : 'd-none')
       }, _react.default.createElement("div", {
         className: "form-group d-block"
       }, _react.default.createElement("a", {
