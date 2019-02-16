@@ -40,7 +40,11 @@ function (_Component) {
 
     _this2 = _possibleConstructorReturn(this, _getPrototypeOf(SocialMeta).call(this, props));
     _this2.state = {
-      inputTrue: true
+      inputTrue: false,
+      facebookChecked: false,
+      twitterChecked: false,
+      showResults: false,
+      output: ""
     };
     return _this2;
   }
@@ -50,7 +54,67 @@ function (_Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      var links = document.querySelector(".generate-link");
+      var inputs = document.querySelectorAll("input:not(.networkChoice)");
+
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("input", function () {
+          if (_this.state.facebookChecked || _this.state.twitterChecked) {
+            _this.setState({
+              inputTrue: true
+            });
+          }
+        });
+      }
+    }
+  }, {
+    key: "checkFacebook",
+    value: function checkFacebook(e) {
+      this.setState({
+        facebookChecked: !this.state.facebookChecked
+      });
+    }
+  }, {
+    key: "checkTwitter",
+    value: function checkTwitter(e) {
+      this.setState({
+        twitterChecked: !this.state.twitterChecked
+      });
+    }
+  }, {
+    key: "generateMeta",
+    value: function generateMeta(e) {
+      var str = "";
+      var title = document.getElementById("title").value;
+      var description = document.getElementById("description").value;
+      var image = document.getElementById("image").value;
+      var url = document.getElementById("url").value;
+
+      if (this.state.facebookChecked) {
+        str += '<!-- Facebook code --> \r\n';
+        str += '<meta property="og:title" content="' + title + '"> \r\n';
+        str += '<meta property="og:description" content="' + description + '"> \r\n';
+        str += '<meta property="og:image" content="' + image + '"> \r\n';
+        str += '<meta property="og:url" content="' + url + '"> \r\n';
+      }
+
+      if (this.state.twitterChecked) {
+        this.state.facebookChecked ? str += '\r\n' : str = "";
+        str += '<!-- Twitter code --> \r\n';
+        str += '<meta property="twitter:title" content="' + title + '"> \r\n';
+        str += '<meta property="twitter:description" content="' + description + '"> \r\n';
+        str += '<meta property="twitter:image" content="' + image + '"> \r\n';
+        str += '<meta property="twitter:url" content="' + url + '"> \r\n';
+      }
+
+      this.setState({
+        output: str,
+        showResults: true
+      });
+    }
+  }, {
+    key: "outputCode",
+    value: function outputCode() {
+      return this.state.output;
     }
   }, {
     key: "render",
@@ -60,18 +124,26 @@ function (_Component) {
       }, _react.default.createElement("div", {
         className: "col-md-8 offset-md-2 col-lg-6 offset-lg-3"
       }, _react.default.createElement("input", {
+        className: "networkChoice",
         type: "checkbox",
-        id: "test1",
-        name: "radio-group"
+        id: "facebook",
+        name: "radio-group",
+        value: this.state.facebookChecked,
+        checked: this.state.facebookChecked,
+        onChange: this.checkFacebook.bind(this)
       }), _react.default.createElement("label", {
-        htmlFor: "test1",
+        htmlFor: "facebook",
         className: "mr-3"
       }, "Facebook"), _react.default.createElement("input", {
+        className: "networkChoice",
         type: "checkbox",
-        id: "test2",
-        name: "radio-group"
+        id: "twitter",
+        name: "radio-group",
+        value: this.state.twitterChecked,
+        checked: this.state.twitterChecked,
+        onChange: this.checkTwitter.bind(this)
       }), _react.default.createElement("label", {
-        htmlFor: "test2"
+        htmlFor: "twitter"
       }, "Twitter")), _react.default.createElement("div", {
         className: "col-md-8 offset-md-2 col-lg-6 offset-lg-3"
       }, _react.default.createElement("div", {
@@ -117,13 +189,19 @@ function (_Component) {
         id: "url",
         className: "d-block form-control"
       })))), _react.default.createElement("div", {
+        className: "col-sm-12 " + (this.state.showResults ? 'd-block' : 'd-none'),
+        id: "generatedCode"
+      }, _react.default.createElement("pre", null, _react.default.createElement("code", {
+        className: "language-markup"
+      }, this.outputCode()))), _react.default.createElement("div", {
         className: "generate-link " + (this.state.inputTrue ? 'd-block' : 'd-none')
       }, _react.default.createElement("div", {
         className: "form-group d-block"
       }, _react.default.createElement("a", {
-        href: "#",
+        href: "#generatedCode",
         id: "generate",
-        className: "btn btn-success"
+        className: "btn btn-success",
+        onClick: this.generateMeta.bind(this)
       }, "Generate"))));
     }
   }]);
@@ -443,7 +521,6 @@ var printWarning = function() {};
 if (process.env.NODE_ENV !== 'production') {
   var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
   var loggedTypeFailures = {};
-  var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
   printWarning = function(text) {
     var message = 'Warning: ' + text;
@@ -473,7 +550,7 @@ if (process.env.NODE_ENV !== 'production') {
 function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
   if (process.env.NODE_ENV !== 'production') {
     for (var typeSpecName in typeSpecs) {
-      if (has(typeSpecs, typeSpecName)) {
+      if (typeSpecs.hasOwnProperty(typeSpecName)) {
         var error;
         // Prop type validation may throw. In case they do, we don't want to
         // fail the render phase where it didn't fail before. So we log it.
@@ -501,7 +578,8 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
             'You may have forgotten to pass an argument to the type checker ' +
             'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
             'shape all require an argument).'
-          );
+          )
+
         }
         if (error instanceof Error && !(error.message in loggedTypeFailures)) {
           // Only monitor this failure once because there tends to be a lot of the
@@ -516,17 +594,6 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         }
       }
     }
-  }
-}
-
-/**
- * Resets warning cache when testing.
- *
- * @private
- */
-checkPropTypes.resetWarningCache = function() {
-  if (process.env.NODE_ENV !== 'production') {
-    loggedTypeFailures = {};
   }
 }
 
