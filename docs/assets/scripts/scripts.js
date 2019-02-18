@@ -59,7 +59,7 @@ function (_Component) {
 
       for (var i = 0; i < inputs.length; i++) {
         inputs[i].addEventListener("input", function () {
-          if (_this.state.facebookChecked || _this.state.twitterChecked) {
+          if (_this.state.facebookChecked || _this.state.twitterChecked || _this.state.generalChecked) {
             _this.setState({
               inputTrue: true
             });
@@ -102,7 +102,6 @@ function (_Component) {
         str += '<title>' + title + '</title> \r\n';
         str += '<meta name="description" content="' + description + '"> \r\n';
         str += '<link rel="canonical" href="' + url + '" /> \r\n';
-        str += '<meta property="og:url" content="' + url + '"> \r\n';
         str += '<meta name="viewport" content="width=device-width,initial-scale=1"> \r\n';
       }
 
