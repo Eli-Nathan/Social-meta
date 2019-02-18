@@ -7,6 +7,7 @@ class SocialMeta extends Component {
       inputTrue: false,
       facebookChecked: false,
       twitterChecked: false,
+      generalChecked: false,
       showResults: false,
       output: ""
     }
@@ -32,14 +33,28 @@ class SocialMeta extends Component {
     this.setState({twitterChecked: !this.state.twitterChecked})
   }
 
+  checkGeneral(e) {
+    this.setState({generalChecked: !this.state.generalChecked})
+  }
+
   generateMeta(e) {
     let str = ""
     let title = document.getElementById("title").value
     let description = document.getElementById("description").value
     let image = document.getElementById("image").value
     let url = document.getElementById("url").value
+    if(this.state.generalChecked) {
+      str += '<!-- General meta tags --> \r\n'
+      str += '<title>'+title+'</title> \r\n'
+      str += '<meta name="description" content="'+description+'"> \r\n'
+      str += '<link rel="canonical" href="'+url+'" /> \r\n'
+      str += '<meta property="og:url" content="'+url+'"> \r\n'
+      str += '<meta name="viewport" content="width=device-width,initial-scale=1"> \r\n'
+
+    }
     if(this.state.facebookChecked) {
-      str += '<!-- Facebook code --> \r\n'
+      this.state.generalChecked ? str += '\r\n' : str = ""
+      str += '<!-- Facebook tags --> \r\n'
       str += '<meta property="og:title" content="'+title+'"> \r\n'
       str += '<meta property="og:description" content="'+description+'"> \r\n'
       str += '<meta property="og:image" content="'+image+'"> \r\n'
@@ -48,11 +63,13 @@ class SocialMeta extends Component {
     }
     if(this.state.twitterChecked) {
       this.state.facebookChecked ? str += '\r\n' : str = ""
-      str += '<!-- Twitter code --> \r\n'
+      str += '<!-- Twitter tags --> \r\n'
       str += '<meta property="twitter:title" content="'+title+'"> \r\n'
       str += '<meta property="twitter:description" content="'+description+'"> \r\n'
       str += '<meta property="twitter:image" content="'+image+'"> \r\n'
       str += '<meta property="twitter:url" content="'+url+'"> \r\n'
+      str += '<meta name="twitter:card" content="summary_large_image"> \r\n'
+      str += '<meta name="twitter:image:alt" content="'+title+'"> \r\n'
     }
     this.setState({output: str, showResults: true})
   }
@@ -85,7 +102,18 @@ class SocialMeta extends Component {
             checked={this.state.twitterChecked}
             onChange={this.checkTwitter.bind(this)}
           />
-          <label htmlFor="twitter">Twitter</label>
+          <label htmlFor="twitter" className="mr-3">Twitter</label>
+
+          <input
+            className="networkChoice"
+            type="checkbox"
+            id="general"
+            name="radio-group"
+            value={this.state.generalChecked}
+            checked={this.state.generalChecked}
+            onChange={this.checkGeneral.bind(this)}
+          />
+          <label htmlFor="general" className="mr-3">General</label>
         </div>
         <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
           <div className="mb-4 border border-info rounded p-2 p-sm-4">

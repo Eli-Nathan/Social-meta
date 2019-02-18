@@ -43,6 +43,7 @@ function (_Component) {
       inputTrue: false,
       facebookChecked: false,
       twitterChecked: false,
+      generalChecked: false,
       showResults: false,
       output: ""
     };
@@ -81,6 +82,13 @@ function (_Component) {
       });
     }
   }, {
+    key: "checkGeneral",
+    value: function checkGeneral(e) {
+      this.setState({
+        generalChecked: !this.state.generalChecked
+      });
+    }
+  }, {
     key: "generateMeta",
     value: function generateMeta(e) {
       var str = "";
@@ -89,8 +97,18 @@ function (_Component) {
       var image = document.getElementById("image").value;
       var url = document.getElementById("url").value;
 
+      if (this.state.generalChecked) {
+        str += '<!-- General meta tags --> \r\n';
+        str += '<title>' + title + '</title> \r\n';
+        str += '<meta name="description" content="' + description + '"> \r\n';
+        str += '<link rel="canonical" href="' + url + '" /> \r\n';
+        str += '<meta property="og:url" content="' + url + '"> \r\n';
+        str += '<meta name="viewport" content="width=device-width,initial-scale=1"> \r\n';
+      }
+
       if (this.state.facebookChecked) {
-        str += '<!-- Facebook code --> \r\n';
+        this.state.generalChecked ? str += '\r\n' : str = "";
+        str += '<!-- Facebook tags --> \r\n';
         str += '<meta property="og:title" content="' + title + '"> \r\n';
         str += '<meta property="og:description" content="' + description + '"> \r\n';
         str += '<meta property="og:image" content="' + image + '"> \r\n';
@@ -99,11 +117,13 @@ function (_Component) {
 
       if (this.state.twitterChecked) {
         this.state.facebookChecked ? str += '\r\n' : str = "";
-        str += '<!-- Twitter code --> \r\n';
+        str += '<!-- Twitter tags --> \r\n';
         str += '<meta property="twitter:title" content="' + title + '"> \r\n';
         str += '<meta property="twitter:description" content="' + description + '"> \r\n';
         str += '<meta property="twitter:image" content="' + image + '"> \r\n';
         str += '<meta property="twitter:url" content="' + url + '"> \r\n';
+        str += '<meta name="twitter:card" content="summary_large_image"> \r\n';
+        str += '<meta name="twitter:image:alt" content="' + title + '"> \r\n';
       }
 
       this.setState({
@@ -143,8 +163,20 @@ function (_Component) {
         checked: this.state.twitterChecked,
         onChange: this.checkTwitter.bind(this)
       }), _react.default.createElement("label", {
-        htmlFor: "twitter"
-      }, "Twitter")), _react.default.createElement("div", {
+        htmlFor: "twitter",
+        className: "mr-3"
+      }, "Twitter"), _react.default.createElement("input", {
+        className: "networkChoice",
+        type: "checkbox",
+        id: "general",
+        name: "radio-group",
+        value: this.state.generalChecked,
+        checked: this.state.generalChecked,
+        onChange: this.checkGeneral.bind(this)
+      }), _react.default.createElement("label", {
+        htmlFor: "general",
+        className: "mr-3"
+      }, "General")), _react.default.createElement("div", {
         className: "col-md-8 offset-md-2 col-lg-6 offset-lg-3"
       }, _react.default.createElement("div", {
         className: "mb-4 border border-info rounded p-2 p-sm-4"
@@ -506,6 +538,7 @@ var printWarning = function() {};
 if (process.env.NODE_ENV !== 'production') {
   var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
   var loggedTypeFailures = {};
+  var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
   printWarning = function(text) {
     var message = 'Warning: ' + text;
@@ -535,7 +568,7 @@ if (process.env.NODE_ENV !== 'production') {
 function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
   if (process.env.NODE_ENV !== 'production') {
     for (var typeSpecName in typeSpecs) {
-      if (typeSpecs.hasOwnProperty(typeSpecName)) {
+      if (has(typeSpecs, typeSpecName)) {
         var error;
         // Prop type validation may throw. In case they do, we don't want to
         // fail the render phase where it didn't fail before. So we log it.
@@ -563,8 +596,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
             'You may have forgotten to pass an argument to the type checker ' +
             'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
             'shape all require an argument).'
-          )
-
+          );
         }
         if (error instanceof Error && !(error.message in loggedTypeFailures)) {
           // Only monitor this failure once because there tends to be a lot of the
@@ -579,6 +611,17 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         }
       }
     }
+  }
+}
+
+/**
+ * Resets warning cache when testing.
+ *
+ * @private
+ */
+checkPropTypes.resetWarningCache = function() {
+  if (process.env.NODE_ENV !== 'production') {
+    loggedTypeFailures = {};
   }
 }
 
